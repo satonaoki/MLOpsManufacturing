@@ -30,7 +30,8 @@
       "ms-vscode.azure-account",
       "redhat.vscode-yaml",
       "eamodio.gitlens",
-      "ms-vsliveshare.vsliveshare"
+      "ms-vsliveshare.vsliveshare",
+      "jebbs.plantuml"
     ],
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
     // "forwardPorts": [],

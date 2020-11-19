@@ -1,0 +1,121 @@
+@startuml
+'scale max 1024 width
+skinparam linetype polyline
+skinparam nodesep 10
+skinparam ranksep 10
+' left to right direction
+
+' C4
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/release/1-0/C4_Container.puml
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/release/1-0/C4_Context.puml
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/release/1-0/C4_Component.puml
+
+' Custom
+!define File(e_alias, e_label, e_techn) rectangle "==e_label\n//<size:TECHN_FONT_SIZE>[e_techn]</size>//" <<file>> as e_alias
+!define VariableGroup(e_alias, e_label) rectangle "==e_label\n" <<variablegroup>> as e_alias
+!define PipelineRun(e_alias, e_label, e_techn) rectangle "==e_label\n//<size:TECHN_FONT_SIZE>[e_techn]</size>//" <<pipelinerun>> as e_alias
+
+' Styling
+' ##################################
+
+skinparam rectangle<<class>> {
+    StereotypeFontColor ELEMENT_FONT_COLOR
+    FontColor #000000
+    BackgroundColor #ff9933
+    BorderColor #78A8D8
+}
+
+skinparam rectangle<<pipelinerun>> {
+    StereotypeFontColor ELEMENT_FONT_COLOR
+    FontColor #000000
+    BackgroundColor #e699ff
+    BorderColor #78A8D8
+}
+
+' LAYOUT_LEFT_RIGHT
+
+title Variable Dependencies in MLOpsPython
+
+left to right direction
+
+Person(dataengineer, Data Engineer, "<$user> \n ")
+Person(mlengineer, ML Engineer, "<$user> \n ")
+
+System_Boundary(cloud, "Cloud") {
+    System(ado, "Azure DevOps") {
+
+        Component(repof1,"Git Repo","de/feature1") {
+            File(yamlvariablesde,"variables-template.yml","Env variables for AzDO pipelines")
+            ' File(envexamplede,".env.example","Example for needed env variables")
+        }
+
+        Component(repo,"Git Repo","main") {
+            File(yamlvariables,"variables-template.yml","Env variables for AzDO pipelines")
+            ' File(envexample,".env.example","Example for needed env variables")
+        }
+
+        Component(repof2,"Git Repo","me/feature2") {
+            File(yamlvariablesme,"variables-template.yml","Env variables for AzDO pipelines")
+            ' File(envexampleme,".env.example","Example for needed env variables")
+        }
+
+        Component(pipelines,"Pipelines","") {
+
+
+        
+            Component(library,"Library","") {
+                VariableGroup(vg,"devopsforai-aml-vg")
+            }
+
+            PipelineRun(run1,"02-processing-data","main") {
+                Component(run1env,"env","variables used")
+            }
+            PipelineRun(run2,"02-processing-data","de/feature1"){
+                Component(run2env,"env","variables used")
+            }
+            PipelineRun(run3,"02-processing-data","me/feature2"){
+                Component(run3env,"env","variables used")
+            }
+        }
+    }
+
+    ' System(amlw, "Azure Machine Learning\nworkspace") {
+    ' }
+}
+
+System_Boundary(datadevhost, "Data Engineer Machine") {
+    Component(repode,"Git Repo","de/feature1") {
+        File(envde,".env","env variables used")
+    }
+}
+
+System_Boundary(mldevhost, "ML Engineer Machine") {
+    Component(repome,"Git Repo","me/feature2") {
+        File(envme,".env","env variables used")
+    }
+}
+
+' Connections
+dataengineer --> repode
+mlengineer --> repome
+
+
+repode -- repof1
+repome -- repof2
+
+yamlvariables --> vg
+yamlvariablesde --> vg
+yamlvariablesme --> vg
+
+vg --> run1env
+vg --> run2env
+vg --> run3env
+
+' run1 --> amlw
+' run2 --> amlw 
+' run3 --> amlw
+
+' repode --> amlw
+' repome --> amlw
+
+@enduml
