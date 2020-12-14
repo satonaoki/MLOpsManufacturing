@@ -51,7 +51,7 @@ RUN apt-get autoremove -y \
 
 # set up git-prompt.sh
 WORKDIR /usr/local/bin
-COPY .devcontainer/image/git-prompt.sh .
+COPY common/observability-lib/.devcontainer/image/git-prompt.sh .
 RUN echo "source /usr/local/bin/git-prompt.sh" >> ~/.bashrc
 RUN echo "PROMPT_COMMAND='__posh_git_ps1 \"\u@\h:\w \" \"\\\$ \";'$PROMPT_COMMAND" >> ~/.bashrc
 
@@ -70,7 +70,7 @@ ENV PATH /opt/conda/bin/:$PATH
 RUN conda update conda
 
 # Add ssh-agent/ssh-add to .bashrc
-COPY .devcontainer/image/ssh-agent.sh /tmp
+COPY common/observability-lib/.devcontainer/image/ssh-agent.sh /tmp
 RUN cat /tmp/ssh-agent.sh >> ~/.bashrc \
     && rm /tmp/ssh-agent.sh
 
@@ -105,8 +105,8 @@ ENV DEBIAN_FRONTEND=dialog
 
 # Copy conda dependencies
 WORKDIR /tmp
-COPY ml_model/dev_dependencies.yml .
+COPY common/observability-lib/dependencies.yml .
 
 # Create conda environment for vscode user
 USER vscode
-RUN conda env update -f dev_dependencies.yml -n base
+RUN conda env update -f dependencies.yml -n base

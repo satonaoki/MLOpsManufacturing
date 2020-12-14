@@ -1,8 +1,10 @@
 // For format details, see https://aka.ms/vscode-remote/devcontainer.json
 {
-    "name": "MLOpsManufacturing",
-    "context": "..",
-    "dockerFile": "./image/Dockerfile",
+    "name": "ObservabilityLib",
+    "context": "../../",
+    "dockerFile": ".devcontainer/image/Dockerfile",
+    "workspaceMount": "source=${localWorkspaceFolder}/../..,target=/workspace,type=bind,consistency=cached",
+    "workspaceFolder": "/workspace/common/observability-lib",
     // Set *default* container specific settings.json values on container create.
     "settings": {
       "autoDocstring.docstringFormat": "google",
@@ -35,7 +37,7 @@
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
     // "forwardPorts": [],
     // Use 'initializeCommand' to run command string or list of command arguments to run on the local machine before the container is created. 
-    "initializeCommand": "/bin/sh ${localWorkspaceFolder}/.devcontainer/image/dockergid.sh ${localWorkspaceFolder}",
+    "initializeCommand": "/bin/sh ${localWorkspaceFolder}/.devcontainer/image/dockergid.sh ${localWorkspaceFolder}/.devcontainer",
     // Use 'postCreateCommand' to run commands after the container is created.
     // "postCreateCommand": "",
     // "postAttachCommand": "",
